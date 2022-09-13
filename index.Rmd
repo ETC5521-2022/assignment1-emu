@@ -924,6 +924,171 @@ Moreover, compared Graph.5i and 5h, it is clearly that the countries with relati
 
 
 
+
+##What has been the trend of fish stocks in the world?
+
+### Method: 
+
+
+Here we use score data 'stock' and 'consumption' data.We not only analysed data within 'stock', but also compare 'stock' with 'consumption'.
+
+1 We firstly plotted a graph to have a comparison of sustainable vs overexploited based on trend and proportion.
+
+2 Previous analysis reveals the world’s trend based on the stock type. Here we would like to go further by analyzing the trend based on each region.
+
+3 Also, we are going to compare the world’s trend of overexploited stock with the trend of world seafood consumption. A considerable decline in seafood consumption around 1989 was observed in previous analysis. By comparing these two data sets, we would like to see if any similar pattern exist.
+
+
+```{r}
+Graph.6a <- ggplot(stock_worldL) +
+geom_col(aes(x = Year, y = proportion, fill = type, position = "fill",width = 0.8)) +
+theme(axis.text.x = element_text(angle = 60, hjust = 1))+
+  labs(x = "Year", y = "Percentage to the world ")+
+  scale_x_continuous(breaks = seq(1974, 2017, by= 2))
+  ggtitle("Graph.5h: Percentage change of stock level")
+
+
+
+ggplotly(Graph.6a)
+
+```
+
+
+It is obviously that sustainable stock is always having a large proportion then those overexploited. 
+
+Although the level of overexploited stock increasing with fluctuation overtime, it has never exceeded 40% of the total.
+
+
+```{r}
+
+ stock_worldL1 <- stock_worldL %>% filter(type=='Overexploited_Fish')
+
+Graph.6b<- ggplot( stock_worldL1, aes(x=Year, y=proportion))+
+  geom_line(colour = "red")+
+  scale_x_continuous(breaks = seq(1974, 2017, by= 4))+
+  labs(x = "Year", y = "Proportion of Overexploited Fish")+
+  ggtitle("Graph.6b: Trend of Overexploited Fish % ")+
+   geom_vline(xintercept = 1989,  color = "blue", size=0.5)+
+  geom_vline(xintercept = 1990,  color = "green", size=0.5)+
+  geom_vline(xintercept = 1995,  color = "red", size=0.5)+
+  geom_vline(xintercept = 1997,  color = "pink", size=0.5)+
+  geom_vline(xintercept = 2000,  color = "yellow", size=0.5)+
+  geom_vline(xintercept = 2004,  color = "purple", size=0.5)+
+  geom_vline(xintercept = 2008,  color = "black", size=0.5)+
+  geom_vline(xintercept = 2011,  color = "orange", size=0.5)
+
+ annual_consumption1<- annual_consumption %>% filter(Year>'1973')
+
+Graph.6c <-ggplot(data = annual_consumption1,
+         aes(x = Year, y = av_consumption)) +
+  geom_line(colour = "blue") +
+  labs(y = "Average consumption") +
+   scale_x_continuous(breaks = seq(1974, 2017, by= 3))+
+  ggtitle("Graph.6c: Trend of Seafood consumption ")+
+ geom_vline(xintercept = 1989,  color = "blue", size=0.5)+
+  geom_vline(xintercept = 1992,  color = "green", size=0.5)+
+  geom_vline(xintercept = 1997,  color = "red", size=0.5)+
+  geom_vline(xintercept = 1998,  color = "pink", size=0.5)+
+  geom_vline(xintercept = 2001,  color = "yellow", size=0.5)+
+  geom_vline(xintercept = 2006,  color = "purple", size=0.5)+
+  geom_vline(xintercept = 2011,  color = "black", size=0.5)+
+  geom_vline(xintercept = 2013,  color = "orange", size=0.5)
+
+
+
+
+Graph.6b /Graph.6c
+
+
+
+
+```
+
+
+Here we compared the proportion of overexploited stock with the world seafood consumption. 
+
+We plotted 8 vertical lines. Each of them represents a start / end point of a particular up / down ward trend. Also, vertical lines with the same color corresponds to each other in different graphs. Since a major decline in consumption in 1989 was observed in previous analysis, we set up 1989 as the first spot. 
+
+It can be seen from Graph.6a and 6b that the trend of overexploited stock and world seafood consumption have a similar pattern. For each individual trend between two vertical lines in Graph.6a, we can find out a similar trend between two vertical lines with the corresponded color in Graph.6b.
+
+It is interesting that most of the vertical line (except the blue one in 1989) in the Graph.6b are on th left to the line with same color in Graph.6c. This implies that starting point for each individual trend in Graph.6a always occurred earlier than that of Graph.6b. Namely, the trend in consumption always delayed a bit compared with the corresponding trend in overexploited stock.
+
+A possible explanation is that the rise of overexploited stock would provide additional support to push up the world seafood consumption. On the other hand, a drop in overexploited stock would tend to reduce the supply and then decrease the total consumption.
+
+```{r}
+stockL <- stock %>% pivot_longer(cols = 'Share of fish stocks within biologically sustainable levels (FAO, 2020)':'Share of fish stocks that are overexploited', names_to= "Type", values_to = "Proportion")  %>% filter(Entity!= "World") 
+
+stockL_sustainable <- stockL %>% filter(Type=='Share of fish stocks within biologically sustainable levels (FAO, 2020)')
+stockL_overexploited <- stockL %>% filter(Type=='Share of fish stocks that are overexploited')
+
+
+  Graph.6d <- ggplot(stockL_sustainable, aes(x = Entity, y = Proportion , fill = Entity)) +
+geom_col(position = "stack") +
+facet_wrap(Year~ Type, nrow=2)+
+theme(axis.text.x = element_text(angle = 60,  hjust = 1)) 
+  
+  
+  
+  
+  Graph.6e <- ggplot(stockL_overexploited, aes(x = Year, y = Proportion , colour = Entity)) +
+geom_line() +
+facet_wrap( ~ Entity, nrow=3)+
+theme(axis.text.x = element_text(angle = 60,  hjust = 1)) 
+  
+  
+ 
+  stockL_sustainableW  <- stock %>% pivot_longer(cols = 'Share of fish stocks within biologically sustainable levels (FAO, 2020)':'Share of fish stocks that are overexploited', names_to= "Type", values_to = "Proportion") %>%
+    filter(Type=='Share of fish stocks within biologically sustainable levels (FAO, 2020)')%>% 
+    filter(Year %in% c("2015","2017"))%>%
+    dplyr::select(-Type )%>%
+    dplyr::select(-Code )%>%
+    pivot_wider(names_from = Year, values_from = Proportion)%>%
+    rename('Sustainable2017'='2017','Sustainable2015'='2015')%>%        mutate(percentage_change= (Sustainable2017-Sustainable2015)/Sustainable2015*100)%>%
+    mutate_if(is.numeric, round, digits = 4)  
+
+  
+
+ 
+    
+    
+   Graph.6f <- ggplot(stockL_sustainableW,aes(x=reorder(Entity, percentage_change), y=percentage_change, fill=Entity))+
+    geom_col(col = ifelse(stockL_sustainableW$percentage_change == !0,'red','green'))+
+     theme(axis.text.x = element_text(angle = 60, hjust = 1))+
+  labs(x = "Entity", y = "Percentage change ")+
+  ggtitle("Graph.6f: Change of sustainable stock level 2015-17")+
+       coord_flip()
+     
+     
+     
+  ggplotly(Graph.6f)
+  
+```
+
+
+Next, we plotted graphs to check the stock level based on regions. 
+
+As we can see from Graph.6f,the world's sustainable stock declined 1.2% between 2015-2017. The main factor contributed to this drop is the decreased sustainable stock in Northwest Pacific and Northwest Central Atlantic which were 21% and 24% respectively.
+
+In comparison, Southeast Pacific, Southwest Pacific and Southwest Atlantic experienced the largest increase in sustainable stock.
+
+It is worth noting that, The stock level of Southeast Central Atlantic,Eastern Central Pacific and Eastern Central Atlantic were almost unchanged.
+
+
+
+
+### Summary  and interesting findings:
+1 The level of overexploited stock increasing with fluctuation overtime.
+
+2 There are similar pattern between the trend of overexploited stock and world seafood consumption. 
+
+3 Compared with stock level, there are lags shown in the world consumption for each similar trend.
+
+4 Some regions indicate very stable stock level between 2015-17.
+
+
+
+
+
 # References
 
 Becker OScbRA, Minka ARWRvbRBEbTP, Deckmyn. A (2021). _maps: Draw Geographical Maps_. R
