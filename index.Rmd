@@ -193,10 +193,10 @@ Q20 How much fresh water produce in each country over time ?
 
 - A decreasing trend in the biologically sustainable levels of fish stocks all over the world.
 
-## What have been the performances of the top 10 seafood producer?
+** What have been the performances of the top 10 seafood producers?
 - One of the interesting finding of previous analysis is that seafood consumption is highly affected by the geographical factor. Namely, coastal. countries tend to consume more than arid regions. Based on this, we expect to see the world seafood production is related to geographical factor as well. This may implies that the production may be concentrated in certain region.
 
-##What has been the trend of fish stocks in the world?
+** What has been the trend of fish stocks in the world?
 - Previous analysis reveals a major decline in world seafood consumption in 1989. Here we expect to see that the trend of fish stock may show a corresponding movement.
 
 # Analysis and findings
@@ -625,6 +625,304 @@ stock_plot
 From the Figure \@ref(fig:stock)), we can observe the trend of fish exploitation and sustainable levels in the world. It is evident from the trend of from the plot that the sustainable level of fish has been going downwards for a very long time due to over exploitation of fish stocks.
 
 Since these two variables complement each other , we can observe that when one increases the other decreases and vice versa.
+
+
+
+
+
+## What have been the performances of the top 10 seafood producers?
+
+### Method: 
+
+We are going to specify the analysis area by focusing on the top 10 seafood producers and digging the data from a wider prospective. 
+
+Here we use 'captured_vs_farmed' data set. The first reason is that 'captured_vs_farmed' contains less NA value than 'production'. Secondly, we tend to focus on the trend of 'captured vs farmed' seafood production for those top producers.
+
+
+To answer this question, we took the following steps:
+
+1 We worked out the overall top ten producers between 2015-2018 as well as the top 10 in terms of captured or farmed fish during the same period. We took the average production for each country 2015 - 2018 because there are many missing value in 2018. This allows us to present a accurate picture to reflect the most recent seafood productivity of each country. 
+
+2 Next we figured out the top ten producers of 1960s using data between 1960-1970 due to the problem of missing value.Then we compared the top 10 of 1960-70 with the list of 2015-18.
+
+3 We would take a look at the percentage contribution for each of the top producer.
+
+4 Lastly, we tried to find out what were the changes of production between 1960s and 2010s.
+ 
+## Findings: 
+
+
+```{r}
+avg_contribution1 <- country_cf %>% 
+  filter (Year >= 2015) %>%
+  group_by(Entity)%>%
+  summarise(avg_captured = mean(captured, na.RM = TRUE),
+            avg_aquaculture = mean(aquaculture, na.RM = TRUE))%>%
+  arrange(-avg_aquaculture) %>%
+  mutate(total= avg_captured+avg_aquaculture)%>%
+  arrange(-total) %>%
+  mutate(rank = row_number())%>%
+  filter(rank %in% 1:10) %>%
+  mutate(across(avg_captured:avg_aquaculture, ~ scales::label_comma()(.x))) %>%
+  rename(`Average_captured` = avg_captured,
+         `Average_aquaculture` = avg_aquaculture)
+
+
+
+avg_aquaculture1 <- country_cf %>% 
+  filter (Year >= 2015) %>%
+  group_by(Entity)%>%
+  summarise(avg_aquaculture = mean(aquaculture, na.RM = TRUE))%>%
+  arrange(-avg_aquaculture) %>%
+  mutate(rank = row_number())%>%
+  filter(rank %in% 1:10) %>%
+  rename(`avg_aquaculture` = avg_aquaculture)
+
+
+
+avg_captured1 <- country_cf %>% 
+  filter (Year >= 2015) %>%
+  group_by(Entity)%>%
+  summarise(avg_captured = mean(captured, na.RM = TRUE))%>%
+  arrange(-avg_captured) %>%
+  mutate(rank = row_number())%>%
+  filter(rank %in% 1:10) %>%
+  rename(`avg_captured` = avg_captured)
+
+```
+
+
+```{r}
+
+
+Graph.5a <- ggplot(avg_contribution1, aes(x= reorder(Entity, -total), y=total/1000000, fill=Entity)) + 
+  geom_col( )+
+  scale_fill_brewer(palette = "Set3") +
+  theme(axis.text.x = element_text(angle = 60, hjust = 1)) +
+  labs(x = "Entity", y = "production ( millions metric tons)")+
+  ggtitle("Graph.5a: Tope 10 producers 2015-18")
+
+
+Graph.5b <- ggplot(avg_aquaculture1, aes(x= reorder(Entity, desc(avg_aquaculture)),y=avg_aquaculture/1000000,fill=Entity)) + 
+  geom_col( )+
+  scale_fill_brewer(palette = "Set3") +
+  theme(axis.text.x = element_text(angle = 60, hjust = 1)) +
+  labs(x = "Entity", y = " production (millions metric tons)")+
+  ggtitle("Graph.5b: Tope 10 aquaculture producers 2015-18 ")
+
+
+
+Graph.5c <- ggplot(avg_captured1, aes(x= reorder(Entity, desc(avg_captured)), y=avg_captured/1000000,fill=Entity)) + 
+  geom_col( )+
+  scale_fill_brewer(palette = "Set3") +
+  theme(axis.text.x = element_text(angle = 60, hjust = 1)) +
+  labs(x = "Entity", y = " production (millions metric tons)")+
+  ggtitle("Graph.5c: Top 10 captured producers 2015-18 ")
+
+
+Graph.5a 
+Graph.5b  
+Graph.5c
+
+
+
+
+
+
+```
+
+From the 3 plots above, we can see that China and Indonesia are the top 2 producers in each of the three ranks. China take the dominate position of seafood production.
+
+In addition, the U.s and Peru are the overall top producer but did not shown on the rank of aquaculture. Similarly, Philippines and Bangladesh are not listed in the top captured seafood producer. To sum up, only six countries present a strong productivity in both captured and farmed production.
+
+
+
+
+```{r}
+contribution70 <- country_cf %>% 
+  filter (Year<=1970) %>%
+  group_by(Entity)%>%
+  mutate_all(~replace(., is.na(.), 0))%>%
+  summarise(avg_captured = mean(captured, na.RM = TRUE),
+            avg_aquaculture = mean(aquaculture, na.RM = TRUE))%>%
+  mutate(total= avg_captured+avg_aquaculture)%>%
+  arrange(-total) %>%
+  mutate(rank = row_number())%>%
+  filter(rank %in% 1:10) %>%
+  mutate(across(avg_captured:avg_aquaculture, ~ scales::label_comma()(.x))) 
+
+
+
+aquaculture70 <- country_cf %>% 
+  filter (Year <= 1970) %>%
+  group_by(Entity)%>%
+  summarise(avg_aquaculture = mean(aquaculture, na.RM = TRUE))%>%
+  arrange(-avg_aquaculture) %>%
+  mutate(rank = row_number())%>%
+  filter(rank %in% 1:10) %>%
+  rename(`avg_aquaculture` = avg_aquaculture)
+
+
+
+captured70 <- country_cf %>% 
+  filter (Year <= 1970) %>%
+  group_by(Entity)%>%
+  summarise(avg_captured = mean(captured, na.RM = TRUE))%>%
+  arrange(-avg_captured) %>%
+  mutate(rank = row_number())%>%
+  filter(rank %in% 1:10) %>%
+  rename(`avg_captured` = avg_captured)
+
+Graph.5d <- ggplot(contribution70, aes(x= reorder(Entity, -total), y=total/1000000,fill=Entity)) + 
+  geom_col( )+
+  scale_fill_brewer(palette = "Set3") +
+  theme(axis.text.x = element_text(angle = 60, hjust = 1)) +
+  labs(x = "Entity", y = "production (millions metric tons)")+
+  ggtitle("Graph.5d: Tope 10 producers 1960s")
+
+
+Graph.5e <- ggplot(aquaculture70, aes(x= reorder(Entity, desc(avg_aquaculture)),y=avg_aquaculture/1000000,fill=Entity )) + 
+  geom_col( )+
+  theme(axis.text.x = element_text(angle = 60, hjust = 1)) +
+  labs(x = "Entity", y = "production (millions metric tons)")+
+  ggtitle("Graph.5e: Tope 10 aquaculture producer 1960s")
+
+
+
+Graph.5f <- ggplot(captured70, aes(x= reorder(Entity, desc(avg_captured)), y=avg_captured/1000000, fill=Entity)) + 
+  geom_col( )+
+  theme(axis.text.x = element_text(angle = 60, hjust = 1)) +
+  labs(x = "Entity", y = " ")+
+  ggtitle("Graph.5f: Top 10 captured producer 1960s")
+
+
+
+
+
+
+
+
+
+```
+```{r}
+Graph.5d +Graph.5a 
+
+Graph.5e +Graph.5b 
+
+Graph.5f +Graph.5c
+
+```
+Compared the top 10 producer in 1960s with that of 2010s, we can see that three developed countries:South Africa, Canada and Spain were the top 10 in 1960s but did not shown on the list of 2010s.On the other hand, three developing countries: Vietnam, Philippines and Bangladesh are the new countries listed in 2010s rank. Geographically, all the new comers in 2010s are located in South-east Asia.
+
+Moreover, considering what we observed in Graph.5a-5c, it seems like the high aquaculture production is the main reason for Philippines and Bangladesh to be ranked as top 10 producer in 2010s.
+
+
+
+```{r}
+
+world_cap_farmlong <- world_cap_farm %>% pivot_wider(names_from = production_type, values_from= production )%>%
+  mutate(total= aquaculture+ captured)%>%
+  filter(Year== 2015)
+  
+   avg_contribution2015 <-   avg_contribution1 %>%mutate(contribution= total/world_cap_farmlong$total)
+   
+   
+Graph.5g <- ggplot(avg_contribution2015,aes(x=reorder(Entity, (contribution)), y=contribution, fill=Entity))+
+  geom_col()+
+   theme(axis.text.x = element_text(angle = 60, hjust = 1))+
+theme(axis.text.x = element_text(angle = 60, hjust = 1)) +
+  labs(x = "Entity", y = "Average captured production (metric tons)")+
+  ggtitle("Graph.5g: Contribution of top 10 captured seafood producer 2015-18 (metric tons)")+
+  coord_flip()
+
+
+ggplotly(Graph.5g)
+
+```
+
+```{r}
+ avg_contribution1970 <- country_cf %>% 
+  filter (Year<=1970) %>%
+  group_by(Entity)%>%
+  summarise(avg_captured = mean(captured, na.RM = TRUE),
+            avg_aquaculture = mean(aquaculture, na.RM = TRUE))%>%
+mutate_all(~replace(., is.na(.), 0))%>%
+  mutate(total1970= avg_captured+avg_aquaculture)%>%
+  filter(Entity %in% c("CHINA","INDONESIA", "INDIA", "VIETNAM", "UNITED STATES", "PERU","JAPAN", "PHILIPPINES", "BANGLADESH", "NORWAY"))%>%
+  mutate(across(avg_captured:avg_aquaculture, ~ scales::label_comma()(.x))) 
+
+Top10_percentage_change <- avg_contribution1970 %>%
+  dplyr::select(Entity, total1970)%>%
+ full_join(avg_contribution1, by=NULL)%>%
+  rename("total2015"=total)%>%
+  dplyr::select(Entity, total1970,total2015)%>%
+  mutate(percentage_change = (total2015-total1970)/total1970*100)%>%
+  arrange(desc(percentage_change))
+
+
+
+Graph.5h <- ggplot(Top10_percentage_change, aes(x=reorder(Entity, percentage_change), y=percentage_change))+
+ geom_col(col = ifelse(Top10_percentage_change$percentage_change < 0,'red','green') )+
+   theme(axis.text.x = element_text(angle = 60, hjust = 1))+
+  labs(x = "Entity", y = "Percentage change 1960s-2010s")+
+  ggtitle("Graph.5h: Percentage change of top 10 producers 1960s-2010s")+
+  coord_flip()
+
+ ggplotly(Graph.5h)
+```
+It can be seen from Graph.5h that both China and Indonesia showed a more than 20 times increase in seafood production from 1960-2018. Following this are the tier 2 countries: Vietnam, India, Bangladesh and Philippines, a huge increase between 5 to 10 times. The U.s and Norway showed a 110% and 59% rise respectively.
+
+On the other hand, Peru and Japan experienced a considerable decline in seafood production, which were 37% and 41%. However, they are still the top 10 producer all over the world.
+
+
+
+```{r}
+
+cf_data_long1 <- captured_vs_farmed_long  %>% filter (Year >= 1960) %>%
+  mutate(Entity = toupper(Entity)) %>%
+  filter (Entity %in% c(avg_contribution$Entity))
+
+Graph.5i <- cf_data_long1%>%
+  ggplot(aes(x = Year,
+           y = (production/1000000),
+           colour = production_type))+
+  geom_line()+
+  labs(x = "Year", y = "Production (metric tons in millions)")+
+  scale_y_continuous(labels = scales::label_comma(scale = 1e-0))+
+  scale_x_continuous(breaks = seq(1960, 2017, by= 10))+ facet_wrap(~ Entity, scales =  "free", nrow = 3)+
+   theme(axis.text.x = element_text(angle = 60, hjust = 1))+
+  ggtitle("Graph.5i: Captured vs aquaculture  1960-2018")
+
+ggplotly(Graph.5i)
+
+
+
+
+
+```
+Here we tend to further explore what happened to Japan and Peru. As we can see from Graph.5i, the farmed production of these two countries remains at the same level from 1960-2018, while the captured production declined quite a lot compare to the peak.
+
+Moreover, compared Graph.5i and 5h, it is clearly that the countries with relatively lower increase (The U.s, Norway) or decline (Peru, Japan) in the total production, all presenting a poor development in farmed production. In comparison, other six countries with relatively higher overall increase, experiencing a significant upward trend in farmed production.
+
+
+
+
+### Summary  and interesting findings:
+
+1 Developing countries take more position in top ten seafood producers. 
+
+2 ALL the new comers on the top 10 list in 2018 are from South-east Asia.
+
+3 The center of world's seafood production is now in west pacific.
+
+4 Farmed production contribute more than captured seafood to the improvement of countries' overall productivity.
+
+5 China and Indonesia are the top 2 seafood producers in total production as well as the farmed and captured ranking. Over the last 60 years, these two countries experenced the most significant upward trend in seafood prodcution.
+
+6 Peru and Japan were the top 2 countries in 1960s. However, they are the only two countries which showed a decrease in seafood production within the top ten list over the last 60 years.
+
+
+
 
 # References
 
