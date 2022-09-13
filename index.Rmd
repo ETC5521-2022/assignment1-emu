@@ -1086,7 +1086,14 @@ It is worth noting that, The stock level of Southeast Central Atlantic,Eastern C
 4 Some regions indicate very stable stock level between 2015-17.
 
 
+# Limitation and recommendation
 
+
+1 With missing value and incomplete data in 'production' and 'captured vs farmed', this study may lack accuracy for visualization.
+
+2 Only 2 years data is available for most entities in 'stock' data set, which make it difficult to analyzing long term performance.
+
+3 Future research would benefit from the use of more datasets to broaden the prospective of analysis.
 
 
 # References
