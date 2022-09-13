@@ -193,6 +193,11 @@ Q20 How much fresh water produce in each country over time ?
 
 - A decreasing trend in the biologically sustainable levels of fish stocks all over the world.
 
+## What have been the performances of the top 10 seafood producer?
+- One of the interesting finding of previous analysis is that seafood consumption is highly affected by the geographical factor. Namely, coastal. countries tend to consume more than arid regions. Based on this, we expect to see the world seafood production is related to geographical factor as well. This may implies that the production may be concentrated in certain region.
+
+##What has been the trend of fish stocks in the world?
+- Previous analysis reveals a major decline in world seafood consumption in 1989. Here we expect to see that the trend of fish stock may show a corresponding movement.
 
 # Analysis and findings
 
