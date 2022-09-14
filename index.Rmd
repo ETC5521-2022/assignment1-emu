@@ -880,7 +880,7 @@ On the other hand, Peru and Japan experienced a considerable decline in seafood 
 
 cf_data_long1 <- captured_vs_farmed_long  %>% filter (Year >= 1960) %>%
   mutate(Entity = toupper(Entity)) %>%
-  filter (Entity %in% c(avg_contribution$Entity))
+  filter (Entity %in% c(avg_contribution1$Entity))
 
 Graph.5i <- cf_data_long1%>%
   ggplot(aes(x = Year,
@@ -902,7 +902,9 @@ ggplotly(Graph.5i)
 ```
 Here we tend to further explore what happened to Japan and Peru. As we can see from Graph.5i, the farmed production of these two countries remains at the same level from 1960-2018, while the captured production declined quite a lot compare to the peak.
 
-Moreover, compared Graph.5i and 5h, it is clearly that the countries with relatively lower increase (The U.s, Norway) or decline (Peru, Japan) in the total production, all presenting a poor development in farmed production. In comparison, other six countries with relatively higher overall increase, experiencing a significant upward trend in farmed production.
+Moreover, compared Graph.5i and 5h, it is clearly that the countries with relatively lower increase (The U.s, Norway) or decline (Peru, Japan) in the total production, all presenting a poor development in farmed production. In other words, those four countries produce more captured fish than farmed seafood.
+
+In comparison, other six countries with relatively higher overall increase, experiencing a significant upward trend in farmed production. The level of aquaculture fishing of these six countries are higher than captured fish.
 
 
 
