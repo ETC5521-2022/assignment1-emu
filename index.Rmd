@@ -381,7 +381,7 @@ avg_contribution <- country_cf %>%
   filter (Year >= 2000) %>%
   group_by(Entity)%>%
   summarise(avg_captured = mean(captured, na.RM = TRUE),
-            avg_aquaculture = mean(captured, na.RM = TRUE))%>%
+            avg_aquaculture = mean(aquaculture, na.RM = TRUE))%>%
   arrange(-avg_aquaculture) %>%
   mutate(rank = row_number())%>%
   filter(rank %in% 1:10) %>%
