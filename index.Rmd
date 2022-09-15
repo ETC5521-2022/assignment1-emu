@@ -83,7 +83,7 @@ fishery <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/ti
 
 
 
-### Visualization and interesting findings 
+### Visualization and analysis
 
 Figure \@ref(fig:worldconsumption) depicts the growing trend in world seafood consumption from 1969 and 2018. The average yearly seafood consumption for one person was 13.8kg, while it increased to 20kg in recent time. Moreover, it is obviously that between 1990 and 1992, the average seafood consumption decreased, mostly because of economic problems in low-income nations such those in Africa, Latin America, the Caribbean, and the Near East. This resulted in increased pressure on many items' prices (Dumas, 1992). Seafood consumption has grown globally as the crisis has subsided. Overall, this is consistent with our assumption that seafood consumption would continue to rise.
 
@@ -192,8 +192,18 @@ theme(axis.text.x = element_text(angle = 60, hjust = 1)) +
 
 ggplotly(Graph.5g)
 ```
+The bar plot \@ref(fig:contribution) shows the contributions of top 10 seafood producer by country. China is the largest contributor and provide 40% seafood of the whole world in recent years. Indonesia and India produce 11% and 5.6% respectively. It's intriguing to note that except US produce 3% and Norway produce 1% of the seafood other major producers are from Asia. 
 
+```{r scatter, echo=FALSE, warning = FALSE, message = FALSE, preserve = TRUE, fig.pos = 'H', out.extra = "", fig.cap = "Relationship between seafood consumption and production"}
+ggscatmat(avg_con, 
+          columns = 2:ncol(avg_con)) 
+```
+To explore relationship between seafood consumption and seafood production, we made a scatter matrix plot \@ref(fig:scatter). Since seafood produce in two ways: aquaculture and capture, we add another two variables `Aquaculture production` and `Capture production`to do the scatter plot and try to find some interest between each variable. The outcome demonstrates a strong positive correlation between each variable. There is a significant linear positive relation between average consumption and total production as we expected.The correlation coefficient is 0.97 almost reach to 1. Moreover, the two methods used to produce fish also has a positive linear relation.
 
+### Summary and findings 
+
+1. 
+2. 
 
 
 
