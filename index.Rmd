@@ -639,6 +639,8 @@ We are going to specify the analysis area by focusing on the top 10 seafood prod
 
 Here we use 'captured_vs_farmed' data set. The first reason is that 'captured_vs_farmed' contains less NA value than 'production'. Secondly, we tend to focus on the trend of 'captured vs farmed' seafood production for those top producers.
 
+In addition, the use of sorted data from the original report help us quite a lot to simplify the frocess. These data includes: 'country_cf' , 'world_cap_farm' and 'captured_vs_farmed_long'.
+
 
 To answer this question, we took the following steps:
 
@@ -654,6 +656,22 @@ To answer this question, we took the following steps:
 
 
 ```{r}
+
+
+captured_vs_farmed  <- captured_vs_farmed %>% 
+  rename(aquaculture = `Aquaculture production (metric tons)`,
+         captured = `Capture fisheries production (metric tons)`)
+
+captured_vs_farmed<- captured_vs_farmed %>% mutate(Entity = toupper(Entity))
+dat <- iso3166  
+dat <- dat %>% mutate(ISOname = toupper(ISOname)) 
+dat <-  dat %>%rename(Entity = ISOname)
+consumption <-  consumption %>% mutate(Entity = toupper(Entity))
+country_cf <- inner_join(captured_vs_farmed, dat, by = "Entity")
+
+captured_vs_farmed_long  <- captured_vs_farmed %>% pivot_longer(cols = aquaculture:captured,names_to = "production_type",values_to = "production")
+
+
 avg_contribution1 <- country_cf %>% 
   filter (Year >= 2015) %>%
   group_by(Entity)%>%
@@ -816,7 +834,29 @@ Moreover, considering what we observed in Graph.5a-5c, it seems like the high aq
 
 
 
+```{r}
+world_cap_farm <- captured_vs_farmed_long %>% filter(Entity =="WORLD")
+world_cap_farmlong <- world_cap_farm %>% pivot_wider(names_from = production_type, values_from= production )%>%
+  mutate(total= aquaculture+ captured)%>%
+  filter(Year== 2015)
+  
+   avg_contribution2015 <-   avg_contribution1 %>%mutate(contribution= total/world_cap_farmlong$total)
+   
+   
+Graph.5g <- ggplot(avg_contribution2015,aes(x=reorder(Entity, (contribution)), y=contribution, fill=Entity))+
+  geom_col()+
+   theme(axis.text.x = element_text(angle = 60, hjust = 1))+
+theme(axis.text.x = element_text(angle = 60, hjust = 1)) +
+  labs(x = "Percentage contribution to world's seafood production", y = "Entity")+
+  ggtitle("Graph.5g: Contribution of top 10 seafood producers 2010s")+
+  coord_flip()
 
+
+ggplotly(Graph.5g)
+
+```
+
+It can be seen from the chart that the top 2 producers contribute over 50% of the total seafood supply.
 
 
 ```{r}
@@ -913,6 +953,8 @@ In comparison, other six countries with relatively higher overall increase, expe
 
 Here we use score data 'stock' and 'consumption' data.We not only analysed data within 'stock', but also compare 'stock' with 'consumption'.
 
+Similarly, we used some cleaned data from original report including 'consumption' and 'annual_consumption'.
+
 1 We firstly plotted a graph to have a comparison of sustainable vs overexploited based on trend and proportion.
 
 2 Previous analysis reveals the world’s trend based on the stock type. Here we would like to go further by analyzing the trend based on each region.
@@ -973,6 +1015,10 @@ Graph.6b<- ggplot( stock_worldL1, aes(x=Year, y=proportion))+
   geom_vline(xintercept = 2004,  color = "purple", size=0.5)+
   geom_vline(xintercept = 2008,  color = "black", size=0.5)+
   geom_vline(xintercept = 2011,  color = "orange", size=0.5)
+
+consumption <- consumption %>% rename(consumption = `Fish, Seafood- Food supply quantity (kg/capita/yr) (FAO, 2020)`)
+annual_consumption <- consumption %>% group_by(Year) %>%
+  summarise(av_consumption = mean(consumption, na.rm=TRUE))
 
  annual_consumption1<- annual_consumption %>% filter(Year>'1973')
 
