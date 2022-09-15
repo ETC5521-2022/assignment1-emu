@@ -57,6 +57,7 @@ library(transformr)
 library(gifski)
 library(viridis)
 library(png)
+library(GGally)
 
 ```
 
@@ -87,7 +88,7 @@ Code:  Country code
 Year:  	   Year
 Aquaculture production (metric tons):	   Production of aquaculture
 Capture fisheries production (metric tons):		   Captured aquaculture 
-------------------------------------------|:---------|:-----------|
+
 
 ```{r}
 str(captured_vs_farmed )
@@ -510,7 +511,7 @@ In comparison, other six countries with relatively higher overall increase, expe
 
 ### Summary  and interesting findings:
 
-1 Developing countries take more position in top ten seafood producers. 
+1 Developing countries take more position in top ten seafood producers compared with 1960s.. 
 
 2 ALL the new comers on the top 10 list in 2010s are from South-east Asia.
 
@@ -630,20 +631,27 @@ Graph.6b /Graph.6c
 
 
 ```
+```{r}
+consumption_stock <- left_join(stock_world, annual_consumption1, by='Year')%>%
+        rename('Consumption_(kg/capita/yr)'= av_consumption)
+
+
+Graph.6d<- ggpairs(consumption_stock, columns = 3:5)
+
+Graph.6d
+
+```
 
 
 Here we compared the proportion of overexploited stock with the world seafood consumption. 
 
 We plotted 8 vertical lines. Each of them represents a start / end point of a particular up / downward trend. Also, vertical lines with the same color corresponds to each other in different graphs. Since a major decline in consumption in 1989 was observed in previous analysis, we set up 1989 as the first spot. 
 
-It can be seen from Graph.6a and 6b that the trend of overexploited stock and world seafood consumption have a similar pattern. For each individual trend between two vertical lines in Graph.6a, we can find out a similar trend between two vertical lines with the corresponded color in Graph.6b.
+It can be seen from Graph.6a and 6b that the trend of overexploited stock and world seafood consumption have a similar pattern. For each individual trend between two lines in Graph.6a, we can find out a similar trend between two lines with the corresponded color in Graph.6b.
 
-It is interesting that most of the vertical line (except the trend between yellow and purple) in the Graph.6b are on th left to the line with same color in Graph.6c. This implies that the trend in consumption always delayed a bit compared with the corresponding trend in overexploited stock.
+It is interesting that most of the line (except the trend between yellow and purple) in the Graph.6b are on th left to the line with same color in Graph.6c. This implies that the trend in consumption always delayed compared with the corresponding trend in overexploited stock.
 
-Since the level of sustainable stock shows a opposite trend to the overexploited stock, we can also conclude that seafood consumption has a reverse movement with sustainable stock since 1989.
-
-
-
+Moreover,  Graph.6d indicates that sustainable stock having a strong negative correlation with seafood consumption, which further proved our observation in Graph.6b and 6c.
 
 
 ```{r}
