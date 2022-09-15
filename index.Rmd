@@ -28,16 +28,16 @@ knitr::opts_chunk$set(echo = FALSE,
 
 # Introduction and motivation
 
-Global fishing receives a great deal of attention in the media for the past decades. The rise of world population has increased the demand for seafood across the world. Coastal countries mainly rely on fishing as one of the most important food sources. Our first research question would learn about seafood consumption of countries over time. We’ll also study about how much seafood are being produced by each country overtime.
+Global fishing receives a great deal of attention in the media for the past decades. The rise of world population has increased the demand for seafood across the world. Meanwhile, the health of fish population in the world remains as a concern with the rise of global fishing. Fish farming (or ‘aquaculture’)helps to contribute to the seafood production while alleviating the pressure of wild fisheries. 
 
-Meanwhile, the health of fish population in the world remains as a concern with the rise of global fishing. It then prompts us to assess how much of fish stocks are caught within the sustainable levels over the years without over exploiting the fish populations.
+This study is based on the data sets of global fishing. We explore these data by analyzing the performance for each country/region in terms of consumption, production and fish stock level. Moreover, we compare different data sets to reveal unexpected findings.
 
-Fish farming (or ‘aquaculture’)helps to contribute to the seafood production while alleviating the pressure of wild fisheries. This inspires us to further analyse the trend of aquaculture as compared to wild fish catch over time.
+We begin by describing the data in the next section, including the way we source it and prepare it for analysis. 
 
-We begin by describing the data in the next section, how we source it and how we prepare the data for analysis. In the analysis section, we present our observations through graphical displays. Our main tool is R, a programming language for statistical computing and graphics.
+In the analysis section, we present our observations through graphical displays. Our main tool is R, a programming language for statistical computing and graphics.
  
 
-# Data description 
+
 
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE}
@@ -71,6 +71,8 @@ stock <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidy
 production <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2021/2021-10-12/seafood-and-fish-production-thousand-tonnes.csv')
 ```
 
+# Data description 
+
 
 The data set has been obtained from `tidytuesday` r package or through the website https://ourworldindata.org. The data comprises of four files in the “.csv” format which is machine readable and can be used to analyze the state of fish production and consumption in the world.
 The data dictionary for the data set has been given below. They define the variables and their types in each of the data sets.  
@@ -79,51 +81,131 @@ The data dictionary for the data set has been given below. They define the varia
 
 ## `capture-fisheries-vs-aquaculture.csv`
 
-|variable                                   |class     |description |
-|:------------------------------------------|:---------|:-----------|
-|Entity                               |character | Country/entity |
-|Code                                 |character | Country code (see `countrycode` R package) |
-|Year                                       |double    | Year|
-|Aquaculture production (metric tons)       |double    | Production of aquaculture animals|
-|Capture fisheries production (metric tons) |double    | Captured aquaculture |
+### 'captured_vs_farmed' - Data Dictionary
+Entity:	 Country/entity
+Code:  Country code
+Year:  	   Year
+Aquaculture production (metric tons):	   Production of aquaculture
+Capture fisheries production (metric tons):		   Captured aquaculture 
+------------------------------------------|:---------|:-----------|
+
+```{r}
+str(captured_vs_farmed )
+```
+
+The data has 5 variables and 14,674 observations. The 'Code' variable is character  while others are numeric .
+
+
+### 'captured_vs_farmed' - Data quality Check 
+```{r}
+
+captured_vs_farmed %>%
+  vis_miss(sort_miss = TRUE)
+
+
+```
+The data has 8.1% missing value. Most of them are in the variables of 'aquaculture' and 'code'. 
+
 
 
 
 ## `fish-and-seafood-consumption-per-capita.csv`
 
-|variable                                                       |class     |description |
-|:--------------------------------------------------------------|:---------|:-----------|
-|Entity                               |character | Country/entity |
-|Code                                 |character | Country code (see `countrycode` R package) |
-|Year                                                           |double    | Year |
-|Fish, Seafood- Food supply quantity (kg/capita/yr) (FAO, 2020) |double    | Food supply in fish in kg/capita/year |
+### 'consumption' - Data Dictionary
+
+Entity: Country/entity 
+Code:   Country code 
+Year:   Year 
+Fish,Seafood-Food supply quantity(kg/capita/yr)(FAO, 2020):Food supply in fish
+
+
+```{r}
+str(consumption )
+```
+
+As we can see, there are 4 variables and 11,028 observation in total. The 'Entityy' and 'Code' variable are character while others are numerical.
+
+### 'consumption ' - Data quality Check 
+
+```{r}
+
+consumption %>%
+  vis_miss(sort_miss = TRUE)
+
+
+```
+15.72% of values in 'Code' are missing. This does not affect our analysis.
+
+
 
 ## `fish-stocks-within-sustainable-levels.csv`
 
-|variable                                                                |class     |description |
-|:-----------------------------------------------------------------------|:---------|:-----------|
-|Entity                               |character | Country/entity |
-|Code                                 |character | Country code (see `countrycode` R package) |
-|Year                                                                    |double    | Year |
-|Share of fish stocks within biologically sustainable levels (FAO, 2020) |double    | Share of sustainable fish stock |
-|Share of fish stocks that are overexploited                             |double    | Share of fish stock that are overexploited |
+### 'stock' - Data Dictionary
+
+
+Entity: Country/entity 
+Code:   code 
+Year:   Year 
+Share of fish stocks within biologically sustainable levels:  Share of sustainable fish stock 
+Share of fish stocks that are overexploited: Share of fish stock that are overexploited 
+
+
+```{r}
+str(stock)
+```
+'stock' has 5 variables and 51 observations. The 'Entityy' and 'Code' variable are character while others are numerical.
+
+### 'stock ' - Data quality Check 
+
+```{r}
+
+stock %>%
+  vis_miss(sort_miss = TRUE)
+
+
+```
+Similar to 'consumption', all missing value are from 'Code'.
+
+
 
 
 
 ## `seafood-and-fish-production-thousand-tonnes.csv`
 
-|variable                                      |class     |description |
-|:----------------------------------------------|:---------|:-----------|
-|Entity                               |character | Country/entity |
-|Code                                 |character | Country code (see `countrycode` R package) |
-|Year                                          |double    |.           |
-|Pelagic Fish - 2763 - Production - 5510 - tonnes       |double    | Pelagic Fish |
-|Crustaceans - 2765 - Production - 5510 - tonnes        |double    | Crustaceans |
-|Cephalopods - 2766 - Production - 5510 - tonnes        |double    | Cephalopods |
-|Demersal Fish - 2762 - Production - 5510 - tonnes      |double    | Demersal |
-|Freshwater Fish - 2761 - Production - 5510 - tonnes    |double    | Freshwater |
-|Molluscs, Other - 2767 - Production - 5510 - tonnes    |double    | Molluscs |
-|Marine Fish, Other - 2764 - Production - 5510 - tonnes |double    | Marine |
+### 'production' - Data Dictionary
+ 
+
+
+Entity: Country/entity 
+Code:   Country code 
+Year:   Year                                 
+Pelagic Fish - 2763 - Production - 5510 - tonnes:        Pelagic Fish 
+Crustaceans - 2765 - Production - 5510 - tonnes:         Crustaceans 
+Cephalopods - 2766 - Production - 5510 - tonnes:         Cephalopods 
+Demersal Fish - 2762 - Production - 5510 - tonnes:       Demersal 
+Freshwater Fish - 2761 - Production - 5510 - tonnes:     Freshwater 
+Molluscs, Other - 2767 - Production - 5510 - tonnes:     Molluscs 
+Marine Fish, Other - 2764 - Production - 5510 - tonnes:  Marine 
+
+```{r}
+str(production)
+```
+There are 10 variables and 10,326 observations. The 'Entityy' and 'Code' variable are character while others are numerical.
+
+### 'production ' - Data quality Check 
+
+```{r}
+
+production %>%
+  miss_var_summary(sort_miss = TRUE)
+
+
+```
+
+
+As we can see, only ' Entity' and 'Code' do not have missing values. 
+
+
 
 
 # Expected findings 
@@ -350,33 +432,6 @@ Moreover, considering what we observed in Graph.5a-5c, it seems like the high aq
 
 
 
-```{r}
-world_cap_farm <- captured_vs_farmed_long %>% filter(Entity =="WORLD")
-
-world_cap_farmlong <- world_cap_farm %>% 
-        pivot_wider(names_from = production_type, values_from= production )%>%
-        mutate(total= aquaculture+ captured)%>%
-        filter(Year== 2015)
-  
-avg_contribution2015 <-   avg_contribution1 %>%
-        mutate(contribution= total/world_cap_farmlong$total)
-   
-   
-Graph.5g <- ggplot(avg_contribution2015,aes(x=reorder(Entity, (contribution)), y=contribution, fill=Entity))+
-        geom_col()+
-        theme(axis.text.x = element_text(angle = 60, hjust = 1))+
-        theme(axis.text.x = element_text(angle = 60, hjust = 1)) +
-        labs(x = "Percentage contribution to world's seafood production", y = "Entity")+
-        ggtitle("Graph.5g: Contribution of top 10 seafood producers 2010s")+
-        coord_flip()
-
-
-ggplotly(Graph.5g)
-
-```
-
-
-It can be seen from the chart that the top 2 producers contribute over 50% of the total seafood supply.
 
 
 ```{r}
