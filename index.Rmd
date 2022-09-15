@@ -78,8 +78,8 @@ fishery <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/ti
 
 ## What would be the notable finding when we comparing the consumption with production?
 
-
-
+### ### Method
+Data cleansing: Use `left_join()` function combine `consumption.csv` and `capture_vs_farmed.csv` into one data set named `con_cap`. In order to get the total production, add a new variable is the summation of `Aquaculture production` and `Capture production`. We use the new data set to do line plots and scatter plot for question one.
 
 
 
