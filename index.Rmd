@@ -816,27 +816,8 @@ Moreover, considering what we observed in Graph.5a-5c, it seems like the high aq
 
 
 
-```{r}
-
-world_cap_farmlong <- world_cap_farm %>% pivot_wider(names_from = production_type, values_from= production )%>%
-  mutate(total= aquaculture+ captured)%>%
-  filter(Year== 2015)
-  
-   avg_contribution2015 <-   avg_contribution1 %>%mutate(contribution= total/world_cap_farmlong$total)
-   
-   
-Graph.5g <- ggplot(avg_contribution2015,aes(x=reorder(Entity, (contribution)), y=contribution, fill=Entity))+
-  geom_col()+
-   theme(axis.text.x = element_text(angle = 60, hjust = 1))+
-theme(axis.text.x = element_text(angle = 60, hjust = 1)) +
-  labs(x = "Entity", y = "Average captured production (metric tons)")+
-  ggtitle("Graph.5g: Contribution of top 10 captured seafood producer 2015-18 (metric tons)")+
-  coord_flip()
 
 
-ggplotly(Graph.5g)
-
-```
 
 ```{r}
  avg_contribution1970 <- country_cf %>% 
