@@ -202,8 +202,10 @@ To explore relationship between seafood consumption and seafood production, we m
 
 ### Summary and findings 
 
-1. 
-2. 
+1. Upward trend for seafood production and consumption worldwide  
+2. Positive linear relationship between seafood production and consumption. 
+3. Two seafood produce method: Aquaculture and capture have positive linear relation. 
+4. Asia is the major continent to produce seafood and China produces the most seafood. 
 
 
 
