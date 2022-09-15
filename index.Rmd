@@ -26,15 +26,7 @@ knitr::opts_chunk$set(echo = FALSE,
                       fig.align = "center")
 ```
 
-# Introduction and motivation
 
-Global fishing receives a great deal of attention in the media for the past decades. The rise of world population has increased the demand for seafood across the world. Coastal countries mainly rely on fishing as one of the most important food sources. Our first research question would learn about seafood consumption of countries over time. We’ll also study about how much seafood are being produced by each country overtime.
-
-Meanwhile, the health of fish population in the world remains as a concern with the rise of global fishing. It then prompts us to assess how much of fish stocks are caught within the sustainable levels over the years without over exploiting the fish populations.
-
-Fish farming (or ‘aquaculture’)helps to contribute to the seafood production while alleviating the pressure of wild fisheries. This inspires us to further analyse the trend of aquaculture as compared to wild fish catch over time.
-
-We begin by describing the data in the next section, how we source it and how we prepare the data for analysis. In the analysis section, we present our observations through graphical displays. Our main tool is R, a programming language for statistical computing and graphics.
  
 
 # Data description 
@@ -211,6 +203,15 @@ To explore relationship between seafood consumption and seafood production, we m
 
 ## Compare production of 7 different fish type. Which type of seafood contribute the most to meet the increasing demand? 
 
+### Method 
+
+We want to explore something interest when comparing fish type production. 
+
+Use the `contribution.csv` data set and simplified the name of the variables of 7 types of fish, since they are too long and not easy to read. Add up each fish type as a total production variable. We wonder which country contribute the most for each type of fish. In order to to do that, I make a summary for average yearly production for each type of fish by countries and then using max() function to find the answer. 
+
+To compare production of each type fish, I decide to use column plot. Not only it can shows the trend but also easy to see the difference. Categorize year to 4 decade and get the average production for each type fish. Then use `pivot_longer()` to gather fish type into one column, this is the preparation for making the column plot. 
+
+
 
 ```{r} 
 
@@ -233,17 +234,7 @@ new_pro$`Total fish production`  = rowSums(new_pro[, c("Pelagic Fish", "Crustace
 
 
 
-## `Maximum yearly production of 7 different fish type`
 
-| Fish Type       | Entity   | production(metric tons) |
-|:----------------|:---------|:------------------------|
-| Pelagic Fish    | Americas | 12495788.08             |
-| Crustaceans     | Asia     | 3748006                 |
-| Cephalopods     | Asia     | 1578872                 |
-| Demersal Fish   | Europe   | 7979733                 |
-| Freshwater Fish | Asia     | 14040488                |
-| Molluscs        | Asia     | 6115966                 |
-| Marine Fish     | Asia     | 6597212                 |
 
 ```{r}
 fish_type1 <- new_pro %>%  
@@ -263,10 +254,11 @@ fish_type<-fish_type1[-c(126),]
 
 #fish_type %>% filter(`avg Marine Fish` >= 6597212)
 
-
 ```
 
-```{r}
+
+
+```{r fishtype, echo=FALSE, warning = FALSE, message = FALSE, preserve = TRUE, fig.pos = 'H', out.extra = "", fig.cap = "Compare Fish Type production"}
 
 yr_fishtype <- within(new_pro, {
   Decade <- NA
@@ -300,7 +292,33 @@ str(col_type_fish)
 
 
 ```
+### Visualization and analysis 
 
+From the column plot \@ref:(fishtype) we can see that the Pelagic Fish has the largest production scale when comparing with other type fish. 
+
+
+
+
+
+
+
+
+The table below shows the maximum yearly production of 7 different fish type. 
+
+
+
+
+#### `Maximum yearly production of 7 different fish type`
+
+| Fish Type       | Entity   | production(metric tons) |
+|:----------------|:---------|:------------------------|
+| Pelagic Fish    | Americas | 12495788             |
+| Crustaceans     | Asia     | 3748006                 |
+| Cephalopods     | Asia     | 1578872                 |
+| Demersal Fish   | Europe   | 7979733                 |
+| Freshwater Fish | Asia     | 14040488                |
+| Molluscs        | Asia     | 6115966                 |
+| Marine Fish     | Asia     | 6597212                 |
 
 
 
@@ -337,7 +355,6 @@ Pedersen T (2020). _patchwork: The Composer of Plots_. R package version 1.1.1,
 Pedersen T (2020). _transformr: Polygon and Path Transformations_. R package version 0.1.3,
   <https://CRAN.R-project.org/package=transformr>.
   
-Salinas, E., Van Doorn, R., & Redaelli, S. (2015). Maldives: Identifying Opportunities and Constraints to Ending Poverty and Promoting Shared Prosperity.
 
 Simon Garnier, Noam Ross, Robert Rudis, Antônio P. Camargo, Marco Sciaini, and Cédric
   Scherer (2021). Rvision - Colorblind-Friendly Color Maps for R. R package version 0.6.2.
@@ -354,7 +371,6 @@ Tierney N (2017). “visdat: Visualising Whole Data Frames.” _JOSS_, *2*(16), 
 Urbanek S (2013). _png: Read and write PNG images_. R package version 0.1-7,
   <https://CRAN.R-project.org/package=png>.
 
-Wang, P., Ji, J., & Zhang, Y. (2020). Aquaculture extension system in China: development, challenges, and prospects. Aquaculture reports, 17, 100339.
 
 Wickham H, Averick M, Bryan J, Chang W, McGowan LD, François R, Grolemund G, Hayes A, Henry
   L, Hester J, Kuhn M, Pedersen TL, Miller E, Bache SM, Müller K, Ooms J, Robinson D, Seidel
