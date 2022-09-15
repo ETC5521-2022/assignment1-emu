@@ -81,6 +81,51 @@ fishery <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/ti
 
 
 
+
+
+### Visualization and interesting findings 
+
+Figure \@ref(fig:worldconsumption) depicts the growing trend in world seafood consumption from 1969 and 2018. The average yearly seafood consumption for one person was 13.8kg, while it increased to 20kg in recent time. Moreover, it is obviously that between 1990 and 1992, the average seafood consumption decreased, mostly because of economic problems in low-income nations such those in Africa, Latin America, the Caribbean, and the Near East. This resulted in increased pressure on many items' prices (Dumas, 1992). Seafood consumption has grown globally as the crisis has subsided. Overall, this is consistent with our assumption that seafood consumption would continue to rise.
+
+The line plot \@ref(fig:production)of world yearly seafood production shows an upward trend from 1969 to 2018. In 1970, the average production of seafood is 118 million metric tons. While the production became 3 times greater in recent year. And the production decreasing period happened same with the seafood consumption. We can make assumption that there has a positive relationship between seafood consumption and production. 
+
+
+```{r}
+new_con <- consumption %>% 
+    filter(Year >= 1969) %>%  
+     select(-Code)
+
+con_cap <-new_con %>% 
+  left_join(captured_vs_farmed, by = c("Entity","Year")) %>% 
+  rename(`seafood consumption(kg/capita/yr)` = `Fish, Seafood- Food supply quantity (kg/capita/yr) (FAO, 2020)`) %>% 
+  select(-Code) 
+
+con_cap$`Total production(metric tons)` = rowSums(con_cap[, c("Aquaculture production (metric tons)","Capture fisheries production (metric tons)")])
+
+```
+
+```{r worldconsumption, echo=FALSE, warning = FALSE, message = FALSE, preserve = TRUE, fig.pos = 'H', out.extra = "", fig.cap = "Average seafood consumption in the world over time"}
+avg_con <- con_cap %>% 
+  group_by(Year) %>%  
+  summarise(`average consumption` = mean(`seafood consumption(kg/capita/yr)`),
+            `Total production` = sum(`Total production(metric tons)`, na.rm = TRUE), 
+            `Total Aquaculture production`=sum(`Aquaculture production (metric tons)`, na.rm = TRUE), 
+            `Total Capture fisheries production`=sum(`Capture fisheries production (metric tons)`, na.rm = TRUE) ) %>%  
+filter (Year <= 2013)
+  
+
+avgcon <- avg_con %>% 
+  ggplot(aes(x = Year, y = `average consumption`)) + 
+  geom_line(colour = "red") +
+  labs(y = "Average Seafood Consumption (kg) per person per year") 
+
+ggplotly(avgcon)
+
+```
+
+
+
+
 ## Compare production of 7 different fish type. Which type of seafood contribute the most to meet the increasing demand? 
 
 
