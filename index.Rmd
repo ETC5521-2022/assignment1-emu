@@ -212,6 +212,96 @@ To explore relationship between seafood consumption and seafood production, we m
 ## Compare production of 7 different fish type. Which type of seafood contribute the most to meet the increasing demand? 
 
 
+```{r} 
+
+new_pro<-production %>% 
+  rename(`Pelagic Fish`=`Commodity Balances - Livestock and Fish Primary Equivalent - Pelagic Fish - 2763 - Production - 5510 - tonnes`, 
+         Crustaceans = `Commodity Balances - Livestock and Fish Primary Equivalent - Crustaceans - 2765 - Production - 5510 - tonnes`, 
+         Cephalopods = `Commodity Balances - Livestock and Fish Primary Equivalent - Cephalopods - 2766 - Production - 5510 - tonnes`, 
+        `Demersal Fish`  = `Commodity Balances - Livestock and Fish Primary Equivalent - Demersal Fish - 2762 - Production - 5510 - tonnes`, 
+        `Freshwater Fish` = `Commodity Balances - Livestock and Fish Primary Equivalent - Freshwater Fish - 2761 - Production - 5510 - tonnes`, 
+          Molluscs = `Commodity Balances - Livestock and Fish Primary Equivalent - Molluscs, Other - 2767 - Production - 5510 - tonnes`, 
+       `Marine Fish` = `Commodity Balances - Livestock and Fish Primary Equivalent - Marine Fish, Other - 2764 - Production - 5510 - tonnes`)
+
+
+new_pro$`Total fish production`  = rowSums(new_pro[, c("Pelagic Fish", "Crustaceans","Cephalopods", "Demersal Fish", "Freshwater Fish", "Molluscs", "Marine Fish")])
+
+```
+
+
+
+
+
+
+## `Maximum yearly production of 7 different fish type`
+
+| Fish Type       | Entity   | production(metric tons) |
+|:----------------|:---------|:------------------------|
+| Pelagic Fish    | Americas | 12495788.08             |
+| Crustaceans     | Asia     | 3748006                 |
+| Cephalopods     | Asia     | 1578872                 |
+| Demersal Fish   | Europe   | 7979733                 |
+| Freshwater Fish | Asia     | 14040488                |
+| Molluscs        | Asia     | 6115966                 |
+| Marine Fish     | Asia     | 6597212                 |
+
+```{r}
+fish_type1 <- new_pro %>%  
+  group_by(Entity) %>% 
+  summarise(`avg Pelagic Fish` = mean(`Pelagic Fish`, na.rm= TRUE), 
+            `avg Crustaceans` = mean(Crustaceans,  na.rm= TRUE), 
+            `avg Cephalopods` = mean(Cephalopods,  na.rm= TRUE), 
+            `avg Demersal Fish` = mean(`Demersal Fish`,  na.rm= TRUE), 
+            `avg Freshwater Fish` = mean(`Freshwater Fish`,  na.rm= TRUE), 
+            `avg Molluscs` = mean(Molluscs,  na.rm= TRUE),
+            `avg Marine Fish` = mean(`Marine Fish`,  na.rm= TRUE)) %>%  
+  na.omit() 
+
+fish_type<-fish_type1[-c(126),]
+
+#max(fish_type$`avg Marine Fish`)
+
+#fish_type %>% filter(`avg Marine Fish` >= 6597212)
+
+
+```
+
+```{r}
+
+yr_fishtype <- within(new_pro, {
+  Decade <- NA
+  Decade[Year>=1970 & Year <1980] <- "1970-1980"
+  Decade[Year >=1980 & Year <1990] <- "1980-1990"
+  Decade[Year>=1990 & Year <2000] <- "1990-2000"
+  Decade[Year >=2000 & Year <2013] <- "2000-2013"
+})
+
+dec_type <- yr_fishtype %>%  
+  group_by(Decade) %>% 
+  summarise(`PelagicFish` = mean(`Pelagic Fish`, na.rm= TRUE), 
+            `Crustaceans` = mean(Crustaceans,  na.rm= TRUE), 
+            `Cephalopods` = mean(Cephalopods,  na.rm= TRUE), 
+            `DemersalFish` = mean(`Demersal Fish`,  na.rm= TRUE), 
+            `FreshwaterFish` = mean(`Freshwater Fish`,  na.rm= TRUE), 
+            `Molluscs` = mean(Molluscs,  na.rm= TRUE),
+            `MarineFish` = mean(`Marine Fish`,  na.rm= TRUE)) %>%  na.omit()
+
+col_type_fish <- dec_type%>% pivot_longer(cols=c('PelagicFish', 'Crustaceans', 'Cephalopods','DemersalFish','FreshwaterFish','Molluscs','MarineFish'),
+                    names_to='Fish Type',
+                    values_to='production(tons)') 
+
+
+ggplot(col_type_fish, aes(`Fish Type`,`production(tons)`)) +
+      geom_col(aes(fill = `Fish Type`)) +  
+        facet_grid(. ~Decade) +
+  theme(axis.text.x = element_text(angle=45, hjust = 1))
+
+str(col_type_fish)
+
+
+```
+
+
 
 
 
