@@ -60,7 +60,7 @@ library(gifski)
 library(viridis)
 library(png)
 library(GGally)
-
+library(naniar)
 ```
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE}
