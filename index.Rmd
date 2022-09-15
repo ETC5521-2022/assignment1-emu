@@ -255,6 +255,7 @@ highest_consumption   <- country_cons %>% group_by(Entity) %>%
   mutate(rank = row_number())%>%
   filter(rank %in% 1:10) %>%
   rename(`Average Consumption (kg) per person per capita` = avg_consumption)
+
 kable(head(highest_consumption,10), caption = "10 countries with the highest consumption") %>% 
   kable_styling(font_size = 15, bootstrap_options = c("striped", "hover", "condensed"))
 ```
@@ -807,9 +808,6 @@ Graph.5f <- ggplot(captured70, aes(x= reorder(Entity, desc(avg_captured)), y=avg
 ```{r}
 Graph.5d +Graph.5a 
 
-Graph.5e +Graph.5b 
-
-Graph.5f +Graph.5c
 
 ```
 Compared the top 10 producer in 1960s with that of 2010s, we can see that three developed countries:South Africa, Canada and Spain were the top 10 in 1960s but did not shown on the list of 2010s.On the other hand, three developing countries: Vietnam, Philippines and Bangladesh are the new countries listed in 2010s rank. Geographically, all the new comers in 2010s are located in South-east Asia.
@@ -919,7 +917,7 @@ In comparison, other six countries with relatively higher overall increase, expe
 
 4 Farmed production contribute more than captured seafood to the improvement of countries' overall productivity.
 
-5 China and Indonesia are the top 2 seafood producers in total production as well as the farmed and captured ranking. Over the last 60 years, these two countries experenced the most significant upward trend in seafood prodcution.
+5 China and Indonesia are the top 2 seafood producers in total production as well as the farmed and captured ranking. Over the last 60 years, these two countries experenced the most significant upward trend in seafood production.
 
 6 Peru and Japan were the top 2 countries in 1960s. However, they are the only two countries which showed a decrease in seafood production within the top ten list over the last 60 years.
 
@@ -942,6 +940,22 @@ Here we use score data 'stock' and 'consumption' data.We not only analysed data 
 
 
 ```{r}
+stock_world <- stock %>% 
+  mutate(Sustainable_levels_Fish = stock$`Share of fish stocks within biologically sustainable levels (FAO, 2020)`,
+         Overexploited_Fish = stock$`Share of fish stocks that are overexploited`) %>%
+  dplyr::select(-`Share of fish stocks within biologically sustainable levels (FAO, 2020)`, -`Share of fish stocks that are overexploited`) %>%
+  slice(31:51) %>% 
+  dplyr::select(-Code)
+
+
+
+
+stock_worldL <- stock_world %>% pivot_longer(cols = Sustainable_levels_Fish	:Overexploited_Fish,names_to = "type", values_to = "proportion") 
+
+
+
+
+
 Graph.6a <- ggplot(stock_worldL) +
 geom_col(aes(x = Year, y = proportion, fill = type, position = "fill",width = 0.8)) +
 theme(axis.text.x = element_text(angle = 60, hjust = 1))+
@@ -1013,9 +1027,13 @@ We plotted 8 vertical lines. Each of them represents a start / end point of a pa
 
 It can be seen from Graph.6a and 6b that the trend of overexploited stock and world seafood consumption have a similar pattern. For each individual trend between two vertical lines in Graph.6a, we can find out a similar trend between two vertical lines with the corresponded color in Graph.6b.
 
-It is interesting that most of the vertical line (except the blue one in 1989) in the Graph.6b are on th left to the line with same color in Graph.6c. This implies that starting point for each individual trend in Graph.6a always occurred earlier than that of Graph.6b. Namely, the trend in consumption always delayed a bit compared with the corresponding trend in overexploited stock.
+It is interesting that most of the vertical line (except the trend between yellow and purple) in the Graph.6b are on th left to the line with same color in Graph.6c. This implies that the trend in consumption always delayed a bit compared with the corresponding trend in overexploited stock.
 
-A possible explanation is that the rise of overexploited stock would provide additional support to push up the world seafood consumption. On the other hand, a drop in overexploited stock would tend to reduce the supply and then decrease the total consumption.
+Since the level of sustainable stock shows a opposite trend to the overexploited stock, we can also conclude that seafood consumption has a reverse movement with sustainable stock since 1989.
+
+
+
+
 
 ```{r}
 stockL <- stock %>% pivot_longer(cols = 'Share of fish stocks within biologically sustainable levels (FAO, 2020)':'Share of fish stocks that are overexploited', names_to= "Type", values_to = "Proportion")  %>% filter(Entity!= "World") 
@@ -1081,7 +1099,7 @@ It is worth noting that, The stock level of Southeast Central Atlantic,Eastern C
 ### Summary  and interesting findings:
 1 The level of overexploited stock increasing with fluctuation overtime.
 
-2 There are similar pattern between the trend of overexploited stock and world seafood consumption. 
+2 There are similar pattern between the trend of overexploited stock and world seafood consumption since 1989. 
 
 3 Compared with stock level, there are lags shown in the world consumption for each similar trend.
 
