@@ -5,6 +5,7 @@ team: [EMU]
 author:
   - [Min Min Soh]
   - [Rohan Baghel]
+  - (Zhang Zhang)
 
 date: "`r Sys.Date()`"
 output:
@@ -20,7 +21,7 @@ output:
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = FALSE,
-                      eval = TRUE
+                      eval = TRUE,
                       warning = FALSE,
                       message = FALSE,
                       fig.path = "images/",
