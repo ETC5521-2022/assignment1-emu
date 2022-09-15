@@ -646,9 +646,9 @@ To answer this question, we took the following steps:
 
 1 We worked out the overall top ten producers between 2015-2018 as well as the top 10 in terms of captured or farmed fish during the same period. We took the average production for each country 2015 - 2018 because there are many missing value in 2018. This allows us to present a accurate picture to reflect the most recent seafood productivity of each country. 
 
-2 Next we figured out the top ten producers of 1960s using data between 1960-1970 due to the problem of missing value.Then we compared the top 10 of 1960-70 with the list of 2015-18.
+2 Next we figured out the top ten producers of 1960s using data between 1960-1970 due to the problem of missing value.Then we compared the top 10 of 1960s with the list of 2010s.
 
-3 We would take a look at the percentage contribution for each of the top producer.
+3 We would take a look at the percentage contribution for each of the top producers.
 
 4 Lastly, we tried to find out what were the changes of production between 1960s and 2010s.
  
@@ -726,7 +726,7 @@ Graph.5a <- ggplot(avg_contribution1, aes(x= reorder(Entity, -total), y=total/10
         scale_fill_brewer(palette = "Set3") +
         theme(axis.text.x = element_text(angle = 60, hjust = 1)) +
         labs(x = "Entity", y = "production ( millions metric tons)")+
-        ggtitle("Graph.5a: Tope 10 producers 2015-18")
+        ggtitle("Graph.5a: Tope 10 producers 2010s")
 
 
 Graph.5b <- ggplot(avg_aquaculture1, aes(x= reorder(Entity, desc(avg_aquaculture)),  y=avg_aquaculture/1000000,fill=Entity)) + 
@@ -734,7 +734,7 @@ Graph.5b <- ggplot(avg_aquaculture1, aes(x= reorder(Entity, desc(avg_aquaculture
         scale_fill_brewer(palette = "Set3") +
         theme(axis.text.x = element_text(angle = 60, hjust = 1)) +
         labs(x = "Entity", y = " production (millions metric tons)")+
-        ggtitle("Graph.5b: Tope 10 aquaculture producers 2015-18 ")
+        ggtitle("Graph.5b: Tope 10 aquaculture producers 2010s ")
 
 
 
@@ -743,7 +743,7 @@ Graph.5c <- ggplot(avg_captured1, aes(x= reorder(Entity, desc(avg_captured)), y=
         scale_fill_brewer(palette = "Set3") +
         theme(axis.text.x = element_text(angle = 60, hjust = 1)) +
         labs(x = "Entity", y = " production (millions metric tons)")+
-        ggtitle("Graph.5c: Top 10 captured producers 2015-18 ")
+        ggtitle("Graph.5c: Top 10 captured producers 2010s ")
 
 
 Graph.5a 
@@ -757,9 +757,9 @@ Graph.5c
 
 ```
 
-From the 3 plots above, we can see that China and Indonesia are the top 2 producers in each of the three ranks. China take the dominate position of seafood production.
+From the 3 plots above, we can see that China and Indonesia are the top 2 producers in each of the three ranks. China takes the dominate position of seafood production.
 
-In addition, the U.s and Peru are the overall top producer but did not shown on the rank of aquaculture. Similarly, Philippines and Bangladesh are not listed in the top captured seafood producer. To sum up, only six countries present a strong productivity in both captured and farmed production.
+In addition, the U.s and Peru are the overall top producer but did not shown on the rank of aquaculture fishing. Similarly, Philippines and Bangladesh are not listed in the top captured seafood producer. To sum up, only six countries present a strong productivity in both captured and farmed production.
 
 
 
@@ -827,9 +827,11 @@ Graph.5d +Graph.5a
 
 
 ```
+
+
 Compared the top 10 producer in 1960s with that of 2010s, we can see that three developed countries:South Africa, Canada and Spain were the top 10 in 1960s but did not shown on the list of 2010s.On the other hand, three developing countries: Vietnam, Philippines and Bangladesh are the new countries listed in 2010s rank. Geographically, all the new comers in 2010s are located in South-east Asia.
 
-Moreover, considering what we observed in Graph.5a-5c, it seems like the high aquaculture production is the main reason for Philippines and Bangladesh to be ranked as top 10 producer in 2010s.
+Moreover, considering what we observed in Graph.5a-5c, it seems like the high aquaculture production is the main reason for Vietnam, Philippines and Bangladesh to be ranked as top 10 producer in 2010s.
 
 
 
@@ -857,6 +859,7 @@ Graph.5g <- ggplot(avg_contribution2015,aes(x=reorder(Entity, (contribution)), y
 ggplotly(Graph.5g)
 
 ```
+
 
 It can be seen from the chart that the top 2 producers contribute over 50% of the total seafood supply.
 
@@ -891,6 +894,8 @@ geom_col(col = ifelse(Top10_percentage_change$percentage_change < 0,'red','green
 
  ggplotly(Graph.5h)
 ```
+
+
 It can be seen from Graph.5h that both China and Indonesia showed a more than 20 times increase in seafood production from 1960-2018. Following this are the tier 2 countries: Vietnam, India, Bangladesh and Philippines, a huge increase between 5 to 10 times. The U.s and Norway showed a 110% and 59% rise respectively.
 
 On the other hand, Peru and Japan experienced a considerable decline in seafood production, which were 37% and 41%. However, they are still the top 10 producer all over the world.
@@ -912,6 +917,7 @@ Graph.5i <- cf_data_long1%>%
        scale_x_continuous(breaks = seq(1960, 2017, by= 10))+ 
        facet_wrap(~ Entity, scales =  "free", nrow = 3)+
        theme(axis.text.x = element_text(angle = 60, hjust = 1))+
+       scale_color_viridis(discrete = TRUE)+
        ggtitle("Graph.5i: Captured vs aquaculture  1960-2018")
 
 ggplotly(Graph.5i)
@@ -921,6 +927,8 @@ ggplotly(Graph.5i)
 
 
 ```
+
+
 Here we tend to further explore what happened to Japan and Peru. As we can see from Graph.5i, the farmed production of these two countries remains at the same level from 1960-2018, while the captured production declined quite a lot compare to the peak.
 
 Moreover, compared Graph.5i and 5h, it is clearly that the countries with relatively lower increase (The U.s, Norway) or decline (Peru, Japan) in the total production, all presenting a poor development in farmed production. In other words, those four countries produce more captured fish than farmed seafood.
@@ -934,15 +942,15 @@ In comparison, other six countries with relatively higher overall increase, expe
 
 1 Developing countries take more position in top ten seafood producers. 
 
-2 ALL the new comers on the top 10 list in 2018 are from South-east Asia.
+2 ALL the new comers on the top 10 list in 2010s are from South-east Asia.
 
-3 The center of world's seafood production is now in west pacific.
+3 The center of world's seafood production is now in West pacific and Southeast Pacific.
 
 4 Farmed production contribute more than captured seafood to the improvement of countries' overall productivity.
 
-5 China and Indonesia are the top 2 seafood producers in total production as well as the farmed and captured ranking. Over the last 60 years, these two countries experenced the most significant upward trend in seafood production.
+5 China and Indonesia are the top 2 seafood producers in total production as well as the farmed and captured ranking. Over the last 60 years, these two countries experienced the most significant upward trend in seafood production.
 
-6 Peru and Japan were the top 2 countries in 1960s. However, they are the only two countries which showed a decrease in seafood production within the top ten list over the last 60 years.
+6 Peru and Japan were the top 2 countries in 1960s. However, they were the only two countries which showed a decrease in seafood production within the top 10 list over the last 60 years.
 
 
 
@@ -953,9 +961,10 @@ In comparison, other six countries with relatively higher overall increase, expe
 ### Method: 
 
 
-Here we use score data 'stock' and 'consumption' data.We not only analysed data within 'stock', but also compare 'stock' with 'consumption'.
+Here we use score 'stock' and 'consumption' data. We not only analysed data within 'stock', but also compare 'stock' with 'consumption'.
 
 Similarly, we used some cleaned data from original report including 'consumption' and 'annual_consumption'.
+
 
 1 We firstly plotted a graph to have a comparison of sustainable vs overexploited based on trend and proportion.
 
@@ -985,10 +994,9 @@ Graph.6a <- ggplot(stock_worldL) +
 geom_col(aes(x = Year, y = proportion, fill = type, position = "fill",width = 0.8)) +
       theme(axis.text.x = element_text(angle = 60, hjust = 1))+
       labs(x = "Year", y = "Percentage to the world ")+
-      scale_x_continuous(breaks = seq(1974, 2017, by= 2))
+      scale_x_continuous(breaks = seq(1974, 2017, by= 2))+
       ggtitle("Graph.5h: Percentage change of stock level")
-
-
+      
 
 ggplotly(Graph.6a)
 
@@ -1056,7 +1064,7 @@ Graph.6b /Graph.6c
 
 Here we compared the proportion of overexploited stock with the world seafood consumption. 
 
-We plotted 8 vertical lines. Each of them represents a start / end point of a particular up / down ward trend. Also, vertical lines with the same color corresponds to each other in different graphs. Since a major decline in consumption in 1989 was observed in previous analysis, we set up 1989 as the first spot. 
+We plotted 8 vertical lines. Each of them represents a start / end point of a particular up / downward trend. Also, vertical lines with the same color corresponds to each other in different graphs. Since a major decline in consumption in 1989 was observed in previous analysis, we set up 1989 as the first spot. 
 
 It can be seen from Graph.6a and 6b that the trend of overexploited stock and world seafood consumption have a similar pattern. For each individual trend between two vertical lines in Graph.6a, we can find out a similar trend between two vertical lines with the corresponded color in Graph.6b.
 
@@ -1126,12 +1134,13 @@ As we can see from Graph.6f,the world's sustainable stock declined 1.2% between 
 
 In comparison, Southeast Pacific, Southwest Pacific and Southwest Atlantic experienced the largest increase in sustainable stock.
 
-It is worth noting that, The stock level of Southeast Central Atlantic,Eastern Central Pacific and Eastern Central Atlantic were almost unchanged.
+It is worth noting that the stock level of Southeast Central Atlantic,Eastern Central Pacific and Eastern Central Atlantic were almost unchanged.
 
 
 
 
 ### Summary  and interesting findings:
+
 1 The level of overexploited stock increasing with fluctuation overtime.
 
 2 There are similar pattern between the trend of overexploited stock and world seafood consumption since 1989. 
@@ -1152,7 +1161,9 @@ It is worth noting that, The stock level of Southeast Central Atlantic,Eastern C
 
 3 There is not a clear definition about those 'Entity' in 'stock' data. In this case, we are unable to link those entities with countries to have a deeper analysis.
 
-4 Future research would benefit from the use of more datasets to broaden the prospective of analysis. For example, a data of stock level based on each countries performance may help us to dig more insight in terms of sustainable fishing.
+4 Future research would benefit from the use of more datasets to broaden the prospective of analysis. For example, a data of stock level based on each countries' performance may help us to dig more insights in terms of sustainable fishing.
+
+
 
 
 # References
