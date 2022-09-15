@@ -69,6 +69,8 @@ consumption <- readr::read_csv('https://raw.githubusercontent.com/rfordatascienc
 stock <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2021/2021-10-12/fish-stocks-within-sustainable-levels.csv')
 
 production <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2021/2021-10-12/seafood-and-fish-production-thousand-tonnes.csv')
+
+fishery <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2021/2021-10-12/global-fishery-catch-by-sector.csv')
 ```
 
 
@@ -620,6 +622,14 @@ stock_plot
 From the Figure \@ref(fig:stock)), we can observe the trend of fish exploitation and sustainable levels in the world. It is evident from the trend of from the plot that the sustainable level of fish has been going downwards for a very long time due to over exploitation of fish stocks.
 
 Since these two variables complement each other , we can observe that when one increases the other decreases and vice versa.
+
+
+
+
+
+
+
+
 
 # References
 
