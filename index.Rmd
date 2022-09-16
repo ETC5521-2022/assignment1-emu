@@ -6,6 +6,7 @@ author:
   - [Min Min Soh]
   - [Rohan Baghel]
   - [Xiyun Zhou] 
+  - [Zhang Zhang]
 date: "`r Sys.Date()`"
 output:
    bookdown::html_document2:
@@ -49,6 +50,7 @@ library(transformr)
 library(gifski)
 library(viridis)
 library(png)
+library(GGally)
 
 ```
 
