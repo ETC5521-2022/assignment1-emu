@@ -6,7 +6,6 @@ author:
   - [Min Min Soh]
   - [Rohan Baghel]
   - [Xiyun Zhou] 
-
 date: "`r Sys.Date()`"
 output:
    bookdown::html_document2:
@@ -14,10 +13,14 @@ output:
     df_print: paged
     number_sections: yes
     fig_caption: yes
-
+editor_options: 
+  markdown: 
+    wrap: 72
 ---
 
-[This assignment is for ETC5521 Assignment 1 by Team `r rmarkdown::metadata$team` comprising of `r knitr::combine_words(rmarkdown::metadata$author)`.]{style="color:#006DAE;"}
+[This assignment is for ETC5521 Assignment 1 by Team
+`r rmarkdown::metadata$team` comprising of
+`r knitr::combine_words(rmarkdown::metadata$author)`.]{style="color:#006DAE;"}
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = FALSE, 
@@ -27,11 +30,7 @@ knitr::opts_chunk$set(echo = FALSE,
                       fig.align = "center")
 ```
 
-
- 
-
-# Data description 
-
+# Data description
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE}
 library(tidyverse)
@@ -66,22 +65,38 @@ production <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience
 fishery <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2021/2021-10-12/global-fishery-catch-by-sector.csv')
 ```
 
-
-# Expected findings 
+# Expected findings
 
 ## What would be the notable finding when we comparing the consumption with production?
 
-### ### Method
-Data cleansing: Use `left_join()` function combine `consumption.csv` and `capture_vs_farmed.csv` into one data set named `con_cap`. In order to get the total production, add a new variable is the summation of `Aquaculture production` and `Capture production`. We use the new data set to do line plots and scatter plot for question one.
+### Method
 
-
+Data cleansing: Use `left_join()` function combine `consumption.csv` and
+`capture_vs_farmed.csv` into one data set named `con_cap`. In order to
+get the total production, add a new variable is the summation of
+`Aquaculture production` and `Capture production`. We use the new data
+set to do line plots and scatter plot for question one.
 
 ### Visualization and analysis
 
-Figure \@ref(fig:worldconsumption) depicts the growing trend in world seafood consumption from 1969 and 2018. The average yearly seafood consumption for one person was 13.8kg, while it increased to 20kg in recent time. Moreover, it is obviously that between 1990 and 1992, the average seafood consumption decreased, mostly because of economic problems in low-income nations such those in Africa, Latin America, the Caribbean, and the Near East. This resulted in increased pressure on many items' prices (Dumas, 1992). Seafood consumption has grown globally as the crisis has subsided. Overall, this is consistent with our assumption that seafood consumption would continue to rise.
+Figure \@ref(fig:worldconsumption) depicts the growing trend in world
+seafood consumption from 1969 and 2018. The average yearly seafood
+consumption for one person was 13.8kg, while it increased to 20kg in
+recent time. Moreover, it is obviously that between 1990 and 1992, the
+average seafood consumption decreased, mostly because of economic
+problems in low-income nations such those in Africa, Latin America, the
+Caribbean, and the Near East. This resulted in increased pressure on
+many items' prices (Dumas, 1992). Seafood consumption has grown globally
+as the crisis has subsided. Overall, this is consistent with our
+assumption that seafood consumption would continue to rise.
 
-The line plot \@ref(fig:production)of world yearly seafood production shows an upward trend from 1969 to 2018. In 1970, the average production of seafood is 118 million metric tons. While the production became 3 times greater in recent year. And the production decreasing period happened same with the seafood consumption. We can make assumption that there has a positive relationship between seafood consumption and production. 
-
+The line plot \@ref(fig:production)of world yearly seafood production
+shows an upward trend from 1969 to 2018. In 1970, the average production
+of seafood is 118 million metric tons. While the production became 3
+times greater in recent year. And the production decreasing period
+happened same with the seafood consumption. We can make assumption that
+there has a positive relationship between seafood consumption and
+production.
 
 ```{r}
 new_con <- consumption %>% 
@@ -124,9 +139,6 @@ totalpro <- avg_con %>%  ggplot(aes(x = Year, y = `Total production`/1000000)) +
 ggplotly(totalpro)
 
 ```
-
-
-
 
 ```{r contribution, warning = FALSE, message = FALSE, preserve = TRUE, fig.pos = 'H', out.extra = "", fig.cap = "Contribution of top 10 seafood producer 2015-2018(metric tons)"}
 
@@ -185,36 +197,64 @@ theme(axis.text.x = element_text(angle = 60, hjust = 1)) +
 
 ggplotly(Graph.5g)
 ```
-The bar plot \@ref(fig:contribution) shows the contributions of top 10 seafood producer by country. China is the largest contributor and provide 40% seafood of the whole world in recent years. Indonesia and India produce 11% and 5.6% respectively. It's intriguing to note that except US produce 3% and Norway produce 1% of the seafood other major producers are from Asia. 
+
+The bar plot \@ref(fig:contribution) shows the contributions of top 10
+seafood producer by country. China is the largest contributor and
+provide 40% seafood of the whole world in recent years. Indonesia and
+India produce 11% and 5.6% respectively. It's intriguing to note that
+except US produce 3% and Norway produce 1% of the seafood other major
+producers are from Asia.
 
 ```{r scatter, echo=FALSE, warning = FALSE, message = FALSE, preserve = TRUE, fig.pos = 'H', out.extra = "", fig.cap = "Relationship between seafood consumption and production"}
 ggscatmat(avg_con, 
           columns = 2:ncol(avg_con)) 
 ```
-To explore relationship between seafood consumption and seafood production, we made a scatter matrix plot \@ref(fig:scatter). Since seafood produce in two ways: aquaculture and capture, we add another two variables `Aquaculture production` and `Capture production`to do the scatter plot and try to find some interest between each variable. The outcome demonstrates a strong positive correlation between each variable. There is a significant linear positive relation between average consumption and total production as we expected.The correlation coefficient is 0.97 almost reach to 1. Moreover, the two methods used to produce fish also has a positive linear relation.
 
-### Summary and findings 
-
-1. Upward trend for seafood production and consumption worldwide  
-2. Positive linear relationship between seafood production and consumption. 
-3. Two seafood produce method: Aquaculture and capture have positive linear relation. 
-4. Asia is the major continent to produce seafood and China produces the most seafood. 
-
-
-
-## Compare production of 7 different fish type. Which type of seafood contribute the most to meet the increasing demand? 
-
-### Method 
-
-We want to explore something interest when comparing fish type production. 
-
-Use the `contribution.csv` data set and simplified the name of the variables of 7 types of fish, since they are too long and not easy to read. Add up each fish type as a total production variable. We wonder which country contribute the most for each type of fish. In order to to do that, I make a summary for average yearly production for each type of fish by countries and then using max() function to find the answer. 
-
-To compare production of each type fish, I decide to use column plot. Not only it can shows the trend but also easy to see the difference. Categorize year to 4 decade and get the average production for each type fish. Then use `pivot_longer()` to gather fish type into one column, this is the preparation for making the column plot. 
+To explore relationship between seafood consumption and seafood
+production, we made a scatter matrix plot \@ref(fig:scatter). Since
+seafood produce in two ways: aquaculture and capture, we add another two
+variables `Aquaculture production` and `Capture production`to do the
+scatter plot and try to find some interest between each variable. The
+outcome demonstrates a strong positive correlation between each
+variable. There is a significant linear positive relation between
+average consumption and total production as we expected.The correlation
+coefficient is 0.97 almost reach to 1. Moreover, the two methods used to
+produce fish also has a positive linear relation.
 
 
+### Summary and findings
 
-```{r} 
+1.  Upward trend for seafood production and consumption worldwide\
+2.  Positive linear relationship between seafood production and
+    consumption.
+3.  Two seafood produce method: Aquaculture and capture have positive
+    linear relation.
+4.  Asia is the major continent to produce seafood and China produces
+    the most seafood.
+
+
+
+## Compare production of 7 different fish type. Which type of seafood contribute the most to meet the increasing demand?
+
+### Method
+
+We want to explore something interest when comparing fish type
+production.
+
+Use the `contribution.csv` data set and simplified the name of the
+variables of 7 types of fish, since they are too long and not easy to
+read. Add up each fish type as a total production variable. We wonder
+which country contribute the most for each type of fish. In order to to
+do that, I make a summary for average yearly production for each type of
+fish by countries and then using max() function to find the answer.
+
+To compare production of each type fish, I decide to use column plot.
+Not only it can shows the trend but also easy to see the difference.
+Categorize year to 4 decade and get the average production for each type
+fish. Then use `pivot_longer()` to gather fish type into one column,
+this is the preparation for making the column plot.
+
+```{r}
 
 new_pro<-production %>% 
   rename(`Pelagic Fish`=`Commodity Balances - Livestock and Fish Primary Equivalent - Pelagic Fish - 2763 - Production - 5510 - tonnes`, 
@@ -229,13 +269,6 @@ new_pro<-production %>%
 new_pro$`Total fish production`  = rowSums(new_pro[, c("Pelagic Fish", "Crustaceans","Cephalopods", "Demersal Fish", "Freshwater Fish", "Molluscs", "Marine Fish")])
 
 ```
-
-
-
-
-
-
-
 
 ```{r}
 fish_type1 <- new_pro %>%  
@@ -256,8 +289,6 @@ fish_type<-fish_type1[-c(126),]
 #fish_type %>% filter(`avg Marine Fish` >= 6597212)
 
 ```
-
-
 
 ```{r fishtype, echo=FALSE, warning = FALSE, message = FALSE, preserve = TRUE, fig.pos = 'H', out.extra = "", fig.cap = "Compare Fish Type production"}
 
@@ -293,27 +324,20 @@ str(col_type_fish)
 
 
 ```
-### Visualization and analysis 
 
-From the column plot \@ref:(fishtype) we can see that the Pelagic Fish has the largest production scale when comparing with other type fish. 
+### Visualization and analysis
 
+From the column plot \@ref:(fishtype) we can see that the Pelagic Fish
+has the largest production scale when comparing with other type fish. Demersal Fish used to take the second largest contribution of fish product. However, the second largest changed to Freshwater Fish in recent years. The overall trend for each type fish is increasing along with time. While the production of Pelagic Fish decreased in this decade and Demersal Fish almost keep a same level. 
 
-
-
-
-
-
-
-The table below shows the maximum yearly production of 7 different fish type. 
-
-
-
+The table below shows the maximum yearly production of 7 different fish
+type by countries. Americas has the largest production for Pelagic Fish. Asia contribute most for Crustaceans, Cephalopods, Freshwater Fish, Molluscs and Marine Fish. And European countries contribute most of the Demersal Fish. 
 
 #### `Maximum yearly production of 7 different fish type`
 
 | Fish Type       | Entity   | production(metric tons) |
 |:----------------|:---------|:------------------------|
-| Pelagic Fish    | Americas | 12495788             |
+| Pelagic Fish    | Americas | 12495788                |
 | Crustaceans     | Asia     | 3748006                 |
 | Cephalopods     | Asia     | 1578872                 |
 | Demersal Fish   | Europe   | 7979733                 |
@@ -325,73 +349,97 @@ The table below shows the maximum yearly production of 7 different fish type.
 
 
 
+### Summary and findings
+
+1. Pelagic fish takes the largest fish production. 
+2. Asia contribute the most for fish production. 
+
+
+
+
+
+# Conclusion 
+
+The seafood consumption and production keep increase with the time change. Moreover, it is noteable that a strongly positive linear relationship between fish consumption and production. China produces the most seafood in worldwide and Asia is the main continent producing seafood. Pelagic fish has the highest production scale and most of them comes from Americas. 
+
+Compared with 1960s, developing countries from South-east Asia take more seats in top 10 seafood
+producers in 2010s. Also, farmed fishing is the most important factor to the improvement overall
+productivity. Moreover, we observe that overexploited stock has strong positive correlation with world
+fish consumption.
+
+
+
 
 
 
 # References
 
-Becker OScbRA, Minka ARWRvbRBEbTP, Deckmyn. A (2021). _maps: Draw Geographical Maps_. R
-  package version 3.4.0, <https://CRAN.R-project.org/package=maps>.
+Becker OScbRA, Minka ARWRvbRBEbTP, Deckmyn. A (2021). *maps: Draw
+Geographical Maps*. R package version 3.4.0,
+<https://CRAN.R-project.org/package=maps>.
 
-C. Sievert. Interactive Web-Based Data Visualization with R, plotly, and shiny. Chapman and
-  Hall/CRC Florida, 2020.
+C. Sievert. Interactive Web-Based Data Visualization with R, plotly, and
+shiny. Chapman and Hall/CRC Florida, 2020.
 
-Dumas, M. W. (1992). Productivity trends: prepared fish and seafoods industry. Monthly Lab. Rev., 115, 3.
+Dumas, M. W. (1992). Productivity trends: prepared fish and seafoods
+industry. Monthly Lab. Rev., 115, 3.
 
-Hughes E (2022). _tidytuesdayR: Access the Weekly 'TidyTuesday' Project Dataset_. R package version
-  1.0.2, <https://CRAN.R-project.org/package=tidytuesdayR>.
-  
-H. Wickham. ggplot2: Elegant Graphics for Data Analysis. Springer-Verlag New York, 2016.
+Hughes E (2022). *tidytuesdayR: Access the Weekly 'TidyTuesday' Project
+Dataset*. R package version 1.0.2,
+<https://CRAN.R-project.org/package=tidytuesdayR>.
 
+H. Wickham. ggplot2: Elegant Graphics for Data Analysis. Springer-Verlag
+New York, 2016.
 
-Ooms J (2022). _gifski: Highest Quality GIF Encoder_. R package version 1.6.6-1,
-  <https://CRAN.R-project.org/package=gifski>.
-  
-Pedersen T, Robinson D (2020). _gganimate: A Grammar of Animated Graphics_. R package
-  version 1.0.7, <https://CRAN.R-project.org/package=gganimate>.
+Ooms J (2022). *gifski: Highest Quality GIF Encoder*. R package version
+1.6.6-1, <https://CRAN.R-project.org/package=gifski>.
 
-Pedersen T (2020). _patchwork: The Composer of Plots_. R package version 1.1.1,
-  <https://CRAN.R-project.org/package=patchwork>.
+Pedersen T, Robinson D (2020). *gganimate: A Grammar of Animated
+Graphics*. R package version 1.0.7,
+<https://CRAN.R-project.org/package=gganimate>.
 
-Pedersen T (2020). _transformr: Polygon and Path Transformations_. R package version 0.1.3,
-  <https://CRAN.R-project.org/package=transformr>.
-  
+Pedersen T (2020). *patchwork: The Composer of Plots*. R package version
+1.1.1, <https://CRAN.R-project.org/package=patchwork>.
 
-Simon Garnier, Noam Ross, Robert Rudis, Antônio P. Camargo, Marco Sciaini, and Cédric
-  Scherer (2021). Rvision - Colorblind-Friendly Color Maps for R. R package version 0.6.2.
-  
-  
-Simon Garnier, Noam Ross, Robert Rudis, Antônio P. Camargo, Marco Sciaini, and Cédric Scherer (2021).   Rvision - Colorblind-Friendly Color Maps for R.
+Pedersen T (2020). *transformr: Polygon and Path Transformations*. R
+package version 0.1.3, <https://CRAN.R-project.org/package=transformr>.
 
-Subasinghe, R., Soto, D., & Jia, J. (2009). Global aquaculture and its role in sustainable   development. Reviews in aquaculture, 1(1), 2-9.
+Simon Garnier, Noam Ross, Robert Rudis, Antônio P. Camargo, Marco
+Sciaini, and Cédric Scherer (2021). Rvision - Colorblind-Friendly Color
+Maps for R. R package version 0.6.2.
 
-Tierney N (2017). “visdat: Visualising Whole Data Frames.” _JOSS_, *2*(16), 355.
-  doi:10.21105/joss.00355 <https://doi.org/10.21105/joss.00355>,
-  <http://dx.doi.org/10.21105/joss.00355>.
+Simon Garnier, Noam Ross, Robert Rudis, Antônio P. Camargo, Marco
+Sciaini, and Cédric Scherer (2021). Rvision - Colorblind-Friendly Color
+Maps for R.
 
-Urbanek S (2013). _png: Read and write PNG images_. R package version 0.1-7,
-  <https://CRAN.R-project.org/package=png>.
+Subasinghe, R., Soto, D., & Jia, J. (2009). Global aquaculture and its
+role in sustainable development. Reviews in aquaculture, 1(1), 2-9.
 
+Tierney N (2017). "visdat: Visualising Whole Data Frames." *JOSS*,
+*2*(16), 355. <doi:10.21105/joss.00355>
+<https://doi.org/10.21105/joss.00355>,
+<http://dx.doi.org/10.21105/joss.00355>.
 
-Wickham H, Averick M, Bryan J, Chang W, McGowan LD, François R, Grolemund G, Hayes A, Henry
-  L, Hester J, Kuhn M, Pedersen TL, Miller E, Bache SM, Müller K, Ooms J, Robinson D, Seidel
-  DP, Spinu V, Takahashi K, Vaughan D, Wilke C, Woo K, Yutani H (2019). “Welcome to the
-  tidyverse.” _Journal of Open Source Software_, *4*(43), 1686. doi:10.21105/joss.01686
-  <https://doi.org/10.21105/joss.01686>.
+Urbanek S (2013). *png: Read and write PNG images*. R package version
+0.1-7, <https://CRAN.R-project.org/package=png>.
 
-Wickham H, Hester J, Bryan J (2022). _readr: Read Rectangular Text Data_. R package version
-  2.1.2, <https://CRAN.R-project.org/package=readr>.
+Wickham H, Averick M, Bryan J, Chang W, McGowan LD, François R,
+Grolemund G, Hayes A, Henry L, Hester J, Kuhn M, Pedersen TL, Miller E,
+Bache SM, Müller K, Ooms J, Robinson D, Seidel DP, Spinu V, Takahashi K,
+Vaughan D, Wilke C, Woo K, Yutani H (2019). "Welcome to the tidyverse."
+*Journal of Open Source Software*, *4*(43), 1686.
+<doi:10.21105/joss.01686> <https://doi.org/10.21105/joss.01686>.
 
-Wilke C (2021). _ggridges: Ridgeline Plots in 'ggplot2'_. R package version 0.5.3,
-  <https://CRAN.R-project.org/package=ggridges>.
-  
-Yihui Xie (2022). bookdown: Authoring Books and Technical Documents with R Markdown. R
-  package version 0.26.
+Wickham H, Hester J, Bryan J (2022). *readr: Read Rectangular Text
+Data*. R package version 2.1.2,
+<https://CRAN.R-project.org/package=readr>.
 
-Zhu H (2021). _kableExtra: Construct Complex Table with 'kable' and Pipe Syntax_. R package
-  version 1.3.4, <https://CRAN.R-project.org/package=kableExtra>.
+Wilke C (2021). *ggridges: Ridgeline Plots in 'ggplot2'*. R package
+version 0.5.3, <https://CRAN.R-project.org/package=ggridges>.
 
+Yihui Xie (2022). bookdown: Authoring Books and Technical Documents with
+R Markdown. R package version 0.26.
 
-```{r, echo = FALSE}
-sessioninfo::session_info()
-```
+Zhu H (2021). *kableExtra: Construct Complex Table with 'kable' and Pipe
+Syntax*. R package version 1.3.4,
+<https://CRAN.R-project.org/package=kableExtra>.
